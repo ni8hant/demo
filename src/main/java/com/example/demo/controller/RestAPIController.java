@@ -20,7 +20,7 @@ import com.example.demo.service.IUser;
 @RequestMapping("/account")
 public class RestAPIController {
 
-	@Autowired
+	@Autowired	
 	@Qualifier("userImpl")
 	IUser user;
 

@@ -22,10 +22,10 @@ public class UserImpl implements IUser {
 	public ResponseDto saveUser(RequestDto aRequest) {
 		User user = userRepository.findByUserName(aRequest.getUsername());
 		ResponseDto response = new ResponseDto();
-		if (user == null) {
+		if (user != null) {
 			response.setStatus(ResponseStatus.ERROR.getKey());
 			response.setCode(ResponseStatus.ERROR.getValue());
-			response.setMessage("Account Already Exist ");
+			response.setMessage("Account Already Exist");
 			return response;
 		}
 
@@ -56,6 +56,7 @@ public class UserImpl implements IUser {
 			response.setStatus(ResponseStatus.OK.getKey());
 			response.setCode(ResponseStatus.OK.getValue());
 			response.setMessage("Sign In Successful");
+			response.setToken(user.getToken());
 			return response;
 		}
 		response.setStatus(ResponseStatus.ERROR.getKey());
