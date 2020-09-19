@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.Customer;
 import com.example.demo.dto.RequestDto;
 import com.example.demo.dto.ResponseDto;
+import com.example.demo.entity.RewardEntry;
+import com.example.demo.entity.UserDetails;
+import com.example.demo.repository.RewardEntryRepo;
 import com.example.demo.service.IUser;
 
 @RestController
@@ -23,6 +29,15 @@ public class RestAPIController {
 	@Autowired	
 	@Qualifier("userImpl")
 	IUser user;
+	
+	@Autowired	
+	@Qualifier("rewardServiceRepo")
+	RewardEntryRepo rewardEntryRepo;
+	
+	@Autowired	
+	@Qualifier("userDetails")
+	UserDetails userDetails;
+
 
 	@PostMapping(path = "/sign-up")
 	public ResponseEntity<ResponseDto> saveUser(@RequestBody RequestDto aRequest, HttpServletRequest request,
@@ -42,4 +57,17 @@ public class RestAPIController {
 		return new ResponseEntity<ResponseDto>(resp, HttpStatus.OK);
 	}
 
+	public int getTotalRewardsEarned(Customer customer) {
+		
+		List<RewardEntry> rewards = rewardEntryRepo.getRewardEntries(userDetails.getId());
+		if(rewards==null) {
+			return 0;
+		}
+		int totalPoint =0;
+		for (int i = 0; i < rewards.size()-1; i++) {
+			totalPoint+=rewards.get(i).getPoints();
+		}
+		return totalPoint;
+		
+	}
 }
